@@ -13,11 +13,28 @@ spec:
         app: my-nginx
     spec:
       containers:
-        - name: my-nginx-container
-          image: my-nginx-image
+        - name: my-nginx
+          image: my-nginx:1.0
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
 ---
 apiVersion: v1
-kind: LoadBalancer
-
+kind: Service
+metadata:
+  name: my-nginx-service
+spec:
+  selector:
+    app: my-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
